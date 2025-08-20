@@ -18,8 +18,9 @@ import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 import nick.bonson.demotodolist.utils.DateFormatter
-import java.util.Calendar
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 class TaskEditBottomSheet : BottomSheetDialogFragment() {
 
@@ -69,19 +70,26 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
         priorityInput.setOnItemClickListener { _, _, position, _ -> priority = position }
 
         dueAt?.let {
-            dueDateInput.setText(DateFormatter.format(Date(it)))
+            dueDateInput.setText(DateFormatter.format(it))
         }
         dueDateInput.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            dueAt?.let { calendar.timeInMillis = it }
-            DatePickerDialog(requireContext(), { _, year, month, day ->
-                calendar.set(year, month, day, 0, 0, 0)
-                dueAt = calendar.timeInMillis
-                dueDateInput.setText(DateFormatter.format(Date(dueAt!!)))
-            },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+            val initial = dueAt?.let {
+                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+            } ?: LocalDate.now()
+
+            DatePickerDialog(
+                requireContext(),
+                { _, year, month, day ->
+                    val date = LocalDate.of(year, month + 1, day)
+                    dueAt = date
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli()
+                    dueDateInput.setText(DateFormatter.format(dueAt!!))
+                },
+                initial.year,
+                initial.monthValue - 1,
+                initial.dayOfMonth
             ).show()
         }
 

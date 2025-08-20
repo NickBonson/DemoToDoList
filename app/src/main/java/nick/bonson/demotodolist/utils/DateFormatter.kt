@@ -1,11 +1,17 @@
 package nick.bonson.demotodolist.utils
 
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 object DateFormatter {
-    private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val formatter = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd")
+        .withLocale(Locale.getDefault())
 
-    fun format(date: Date): String = formatter.format(date)
+    fun format(epochMillis: Long): String =
+        Instant.ofEpochMilli(epochMillis)
+            .atZone(ZoneId.systemDefault())
+            .format(formatter)
 }

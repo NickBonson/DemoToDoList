@@ -12,7 +12,6 @@ import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.utils.DateFormatter
 import nick.bonson.demotodolist.utils.TaskDiffCallback
-import java.util.Date
 
 class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
     ListAdapter<TaskEntity, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
@@ -46,7 +45,7 @@ class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
             notes.text = task.description.orEmpty()
             notes.visibility = if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
             priorityChip.text = task.priority.toString()
-            dueChip.text = task.dueAt?.let { DateFormatter.format(Date(it)) } ?: ""
+            dueChip.text = task.dueAt?.let(DateFormatter::format) ?: ""
             dueChip.visibility = if (task.dueAt != null) View.VISIBLE else View.GONE
         }
     }
