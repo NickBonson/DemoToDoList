@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.entity.TaskEntity
+import nick.bonson.demotodolist.data.preferences.TaskPreferences
 import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
 import nick.bonson.demotodolist.model.Filter
+import nick.bonson.demotodolist.model.TaskSort
 import nick.bonson.demotodolist.ui.adapter.TaskAdapter
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
@@ -29,7 +32,8 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         val context = requireContext().applicationContext
         val dao = AppDatabase.getInstance(context).taskDao()
         val repository = DefaultTaskRepository(dao)
-        TaskListViewModelFactory(repository)
+        val prefs = TaskPreferences(context)
+        TaskListViewModelFactory(repository, prefs)
     }
 
     private val adapter = TaskAdapter { task -> showTaskSheet(task) }
@@ -37,6 +41,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.top_app_bar)
         val searchView = view.findViewById<SearchView>(R.id.search_view)
         val chipGroup = view.findViewById<ChipGroup>(R.id.filter_group)
         val recyclerView = view.findViewById<RecyclerView>(R.id.task_list)
@@ -47,6 +52,21 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        toolbar.inflateMenu(R.menu.menu_task_list)
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_sort_due -> {
+                    viewModel.onSortChanged(TaskSort.BY_DUE_AT)
+                    true
+                }
+                R.id.action_sort_priority -> {
+                    viewModel.onSortChanged(TaskSort.BY_PRIORITY)
+                    true
+                }
+                else -> false
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { state ->
                 adapter.submitList(state.items)
@@ -55,6 +75,13 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
                     Filter.ALL -> chipGroup.check(R.id.chip_all)
                     Filter.ACTIVE -> chipGroup.check(R.id.chip_active)
                     Filter.COMPLETED -> chipGroup.check(R.id.chip_done)
+                }
+                if (searchView.query.toString() != state.query) {
+                    searchView.setQuery(state.query, false)
+                }
+                when (state.sort) {
+                    TaskSort.BY_DUE_AT -> toolbar.menu.findItem(R.id.action_sort_due).isChecked = true
+                    TaskSort.BY_PRIORITY -> toolbar.menu.findItem(R.id.action_sort_priority).isChecked = true
                 }
             }
         }

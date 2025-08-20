@@ -16,4 +16,6 @@
     <string name="priority_medium">Medium</string>
     <string name="priority_high">High</string>
     <string name="error_required">Required</string>
+    <string name="sort_by_due_date">Sort by due date</string>
+    <string name="sort_by_priority">Sort by priority</string>
 </resources>

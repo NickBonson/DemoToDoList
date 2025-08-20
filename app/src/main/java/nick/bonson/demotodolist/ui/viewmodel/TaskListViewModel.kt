@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nick.bonson.demotodolist.data.entity.TaskEntity
+import nick.bonson.demotodolist.data.preferences.TaskPreferences
 import nick.bonson.demotodolist.data.repository.TaskRepository
 import nick.bonson.demotodolist.model.Filter
 import nick.bonson.demotodolist.model.TaskListUiState
@@ -16,7 +18,10 @@ import nick.bonson.demotodolist.model.TaskSort
  * ViewModel responsible for managing a list of [TaskEntity].
  * It exposes a [StateFlow] of [TaskListUiState] that the UI can observe.
  */
-class TaskListViewModel(private val repository: TaskRepository) : ViewModel() {
+class TaskListViewModel(
+    private val repository: TaskRepository,
+    private val preferences: TaskPreferences
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TaskListUiState())
     val uiState: StateFlow<TaskListUiState> = _uiState
@@ -24,7 +29,13 @@ class TaskListViewModel(private val repository: TaskRepository) : ViewModel() {
     private var observeJob: Job? = null
 
     init {
-        observeTasks()
+        viewModelScope.launch {
+            val filter = preferences.filterFlow.first()
+            val sort = preferences.sortFlow.first()
+            val query = preferences.queryFlow.first()
+            _uiState.value = _uiState.value.copy(filter = filter, sort = sort, query = query)
+            observeTasks()
+        }
     }
 
     private fun observeTasks() {
@@ -69,16 +80,19 @@ class TaskListViewModel(private val repository: TaskRepository) : ViewModel() {
 
     fun onSearch(query: String) {
         _uiState.value = _uiState.value.copy(query = query)
+        viewModelScope.launch { preferences.setQuery(query) }
         observeTasks()
     }
 
     fun onFilterChanged(filter: Filter) {
         _uiState.value = _uiState.value.copy(filter = filter)
+        viewModelScope.launch { preferences.setFilter(filter) }
         observeTasks()
     }
 
     fun onSortChanged(sort: TaskSort) {
         _uiState.value = _uiState.value.copy(sort = sort)
+        viewModelScope.launch { preferences.setSort(sort) }
         observeTasks()
     }
 }
