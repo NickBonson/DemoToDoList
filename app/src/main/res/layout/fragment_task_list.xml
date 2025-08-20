@@ -31,18 +31,24 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="@string/filter_all"
                 app:checkedIconVisible="false" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="@string/filter_active"
                 app:checkedIconVisible="false" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:text="@string/filter_done"
                 app:checkedIconVisible="false" />
