@@ -1,7 +1,6 @@
 package nick.bonson.demotodolist.ui.fragment
 
 import android.app.DatePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +19,6 @@ import nick.bonson.demotodolist.data.preferences.TaskPreferences
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 import nick.bonson.demotodolist.utils.DateFormatter
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Calendar
 
 class TaskEditBottomSheet : BottomSheetDialogFragment() {
@@ -77,32 +73,28 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
             dueDateInput.setText(DateFormatter.format(it))
         }
         dueDateInput.setOnClickListener {
-            val initial = dueAt?.let {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
-                } else {
-                    val calendar = Calendar.getInstance().apply { timeInMillis = it }
-                    LocalDate.of(
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH) + 1,
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                    )
-                }
-            } ?: LocalDate.now()
+            val initialCalendar = Calendar.getInstance().apply {
+                dueAt?.let { timeInMillis = it }
+            }
 
             DatePickerDialog(
                 requireContext(),
                 { _, year, month, day ->
-                    val date = LocalDate.of(year, month + 1, day)
-                    dueAt = date
-                        .atStartOfDay(ZoneId.systemDefault())
-                        .toInstant()
-                        .toEpochMilli()
+                    val selected = Calendar.getInstance().apply {
+                        set(Calendar.YEAR, year)
+                        set(Calendar.MONTH, month)
+                        set(Calendar.DAY_OF_MONTH, day)
+                        set(Calendar.HOUR_OF_DAY, 0)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                    dueAt = selected.timeInMillis
                     dueDateInput.setText(DateFormatter.format(dueAt!!))
                 },
-                initial.year,
-                initial.monthValue - 1,
-                initial.dayOfMonth
+                initialCalendar.get(Calendar.YEAR),
+                initialCalendar.get(Calendar.MONTH),
+                initialCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
