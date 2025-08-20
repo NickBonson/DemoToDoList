@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="priority_entries">
+        <item>@string/priority_low</item>
+        <item>@string/priority_medium</item>
+        <item>@string/priority_high</item>
+    </string-array>
+</resources>

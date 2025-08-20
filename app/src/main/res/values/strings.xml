@@ -6,4 +6,14 @@
     <string name="filter_all">All</string>
     <string name="filter_active">Active</string>
     <string name="filter_done">Done</string>
+    <string name="title">Title</string>
+    <string name="notes">Notes</string>
+    <string name="priority">Priority</string>
+    <string name="due_date">Due date</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+    <string name="error_required">Required</string>
 </resources>

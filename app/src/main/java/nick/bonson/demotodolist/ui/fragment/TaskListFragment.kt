@@ -32,7 +32,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         TaskListViewModelFactory(repository)
     }
 
-    private val adapter = TaskAdapter()
+    private val adapter = TaskAdapter { task -> showTaskSheet(task) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,9 +80,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
             viewModel.onFilterChanged(filter)
         }
 
-        fab.setOnClickListener {
-            viewModel.onAdd(TaskEntity(title = "New Task"))
-        }
+        fab.setOnClickListener { showTaskSheet(null) }
 
         emptyButton.setOnClickListener { fab.performClick() }
 
@@ -106,5 +104,9 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
             }
         })
         touchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    private fun showTaskSheet(task: TaskEntity? = null) {
+        TaskEditBottomSheet.newInstance(task).show(childFragmentManager, "TaskEdit")
     }
 }
