@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Demo To-Do List</string>
+    <string name="search">Search</string>
+    <string name="add_task">Add Task</string>
+    <string name="no_tasks">No tasks yet</string>
+    <string name="filter_all">All</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_done">Done</string>
 </resources>
