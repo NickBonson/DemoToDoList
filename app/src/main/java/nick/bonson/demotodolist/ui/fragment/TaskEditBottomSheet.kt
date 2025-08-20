@@ -23,6 +23,7 @@ import nick.bonson.demotodolist.utils.DateFormatter
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.Calendar
 
 class TaskEditBottomSheet : BottomSheetDialogFragment() {
 
@@ -80,7 +81,12 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
                 } else {
-                    TODO("VERSION.SDK_INT < O")
+                    val calendar = Calendar.getInstance().apply { timeInMillis = it }
+                    LocalDate.of(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1,
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    )
                 }
             } ?: LocalDate.now()
 
