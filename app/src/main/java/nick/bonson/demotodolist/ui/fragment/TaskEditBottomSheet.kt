@@ -1,6 +1,7 @@
 package nick.bonson.demotodolist.ui.fragment
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -76,7 +77,11 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
         }
         dueDateInput.setOnClickListener {
             val initial = dueAt?.let {
-                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                } else {
+                    TODO("VERSION.SDK_INT < O")
+                }
             } ?: LocalDate.now()
 
             DatePickerDialog(
