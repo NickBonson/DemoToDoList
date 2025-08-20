@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.material3)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
