@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "nick.bonson.demotodolist"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "nick.bonson.demotodolist"
