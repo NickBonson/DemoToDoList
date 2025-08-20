@@ -10,20 +10,29 @@ import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.utils.TaskDiffCallback
 
-class TaskAdapter : ListAdapter<TaskEntity, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
+class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
+    ListAdapter<TaskEntity, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view)
+        return TaskViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TaskViewHolder(itemView: View, private val onItemClick: (TaskEntity) -> Unit) :
+        RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.task_title)
+        private var current: TaskEntity? = null
+
+        init {
+            itemView.setOnClickListener { current?.let(onItemClick) }
+        }
+
         fun bind(task: TaskEntity) {
+            current = task
             title.text = task.title
         }
     }
