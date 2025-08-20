@@ -15,6 +15,7 @@ import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
+import nick.bonson.demotodolist.data.preferences.TaskPreferences
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 import nick.bonson.demotodolist.utils.DateFormatter
@@ -27,7 +28,8 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
         val context = requireContext().applicationContext
         val dao = AppDatabase.getInstance(context).taskDao()
         val repository = DefaultTaskRepository(dao)
-        TaskListViewModelFactory(repository)
+        val prefs = TaskPreferences(context)
+        TaskListViewModelFactory(repository, prefs)
     }
 
     private var taskId: Long = 0L
