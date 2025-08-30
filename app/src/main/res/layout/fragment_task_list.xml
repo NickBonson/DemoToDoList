@@ -25,31 +25,35 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filter_group"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            android:layout_gravity="center">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="54dp"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:textAlignment="center"
                 android:text="@string/filter_all"
                 app:checkedIconVisible="false" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_active"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="54dp"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:textAlignment="center"
                 android:text="@string/filter_active"
                 app:checkedIconVisible="false" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_done"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="54dp"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:textAlignment="center"
                 android:text="@string/filter_done"
                 app:checkedIconVisible="false" />
         </com.google.android.material.chip.ChipGroup>
@@ -90,6 +94,7 @@
                     android:id="@+id/empty_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="54dp"
                     android:text="@string/add_task"
                     android:layout_marginTop="16dp"
                     style="?attr/materialButtonOutlinedStyle"/>

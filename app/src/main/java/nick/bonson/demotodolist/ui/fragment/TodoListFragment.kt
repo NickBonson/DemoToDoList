@@ -1,6 +1,7 @@
 package nick.bonson.demotodolist.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.flow.collect
 import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.repository.DefaultTodoRepository
@@ -47,6 +47,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             viewModel.uiState.collect { state ->
                 adapter.submitList(state.todos)
                 val isEmpty = state.todos.isEmpty()
+                Log.d("isEmpty", "isEmpty: $isEmpty")
                 emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 fab.visibility = if (isEmpty) View.GONE else View.VISIBLE
             }

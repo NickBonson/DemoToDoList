@@ -1,6 +1,7 @@
 package nick.bonson.demotodolist.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.widget.SearchView
@@ -70,7 +71,13 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { state ->
                 adapter.submitList(state.items)
-                emptyState.visibility = if (state.isEmpty) View.VISIBLE else View.GONE
+
+                val isEmpty = state.isEmpty
+                Log.d("isEmpty", "isEmpty: $isEmpty")
+                emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                fab.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
+                //emptyState.visibility = if (state.isEmpty) View.VISIBLE else View.GONE
                 when (state.filter) {
                     Filter.ALL -> chipGroup.check(R.id.chip_all)
                     Filter.ACTIVE -> chipGroup.check(R.id.chip_active)
