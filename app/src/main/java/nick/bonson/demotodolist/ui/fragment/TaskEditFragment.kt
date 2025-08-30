@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import androidx.fragment.app.activityViewModels
 import nick.bonson.demotodolist.R
@@ -21,7 +21,7 @@ import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 import nick.bonson.demotodolist.utils.DateFormatter
 import java.util.Calendar
 
-class TaskEditBottomSheet : BottomSheetDialogFragment() {
+class TaskEditFragment : Fragment() {
 
     private val viewModel: TaskListViewModel by activityViewModels {
         val context = requireContext().applicationContext
@@ -53,7 +53,7 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.dialog_task_edit, container, false)
+        val view = inflater.inflate(R.layout.fragment_task_edit, container, false)
         val titleInput = view.findViewById<TextInputEditText>(R.id.input_title)
         val notesInput = view.findViewById<TextInputEditText>(R.id.input_notes)
         val priorityInput = view.findViewById<AutoCompleteTextView>(R.id.input_priority)
@@ -118,10 +118,10 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
             } else {
                 viewModel.onEdit(task)
             }
-            dismiss()
+            parentFragmentManager.popBackStack()
         }
 
-        cancelButton.setOnClickListener { dismiss() }
+        cancelButton.setOnClickListener { parentFragmentManager.popBackStack() }
 
         return view
     }
@@ -134,8 +134,8 @@ class TaskEditBottomSheet : BottomSheetDialogFragment() {
         private const val ARG_DUE_AT = "due_at"
         private const val ARG_DONE = "done"
 
-        fun newInstance(task: TaskEntity? = null): TaskEditBottomSheet {
-            val fragment = TaskEditBottomSheet()
+        fun newInstance(task: TaskEntity? = null): TaskEditFragment {
+            val fragment = TaskEditFragment()
             fragment.arguments = Bundle().apply {
                 if (task != null) {
                     putLong(ARG_ID, task.id)
