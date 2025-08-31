@@ -2,8 +2,9 @@ package nick.bonson.demotodolist.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -11,9 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.ChipGroup
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import nick.bonson.demotodolist.R
@@ -21,13 +19,17 @@ import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.data.preferences.TaskPreferences
 import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
+import nick.bonson.demotodolist.databinding.FragmentTaskListBinding
 import nick.bonson.demotodolist.model.Filter
 import nick.bonson.demotodolist.model.TaskSort
 import nick.bonson.demotodolist.ui.adapter.TaskAdapter
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 
-class TaskListFragment : Fragment(R.layout.fragment_task_list) {
+class TaskListFragment : Fragment() {
+
+    private var _binding: FragmentTaskListBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: TaskListViewModel by viewModels {
         val context = requireContext().applicationContext
@@ -39,16 +41,30 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private val adapter = TaskAdapter { task -> showTaskEdit(task) }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.top_app_bar)
-        val searchView = view.findViewById<SearchView>(R.id.search_view)
-        val chipGroup = view.findViewById<ChipGroup>(R.id.filter_group)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.task_list)
-        val emptyState = view.findViewById<View>(R.id.empty_state)
-        val emptyButton = view.findViewById<Button>(R.id.empty_button)
-        val fab = view.findViewById<FloatingActionButton>(R.id.fab_add)
+        val toolbar = binding.topAppBar
+        val searchView = binding.searchView
+        val chipGroup = binding.filterGroup
+        val recyclerView = binding.taskList
+        val emptyState = binding.emptyState
+        val emptyButton = binding.emptyButton
+        val fab = binding.fabAdd
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
