@@ -10,12 +10,14 @@ import nick.bonson.demotodolist.databinding.ItemTaskBinding
 import nick.bonson.demotodolist.utils.DateFormatter
 import nick.bonson.demotodolist.utils.TaskDiffCallback
 
-class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
-    ListAdapter<TaskEntity, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
+class TaskAdapter(
+    private val onItemClick: (TaskEntity) -> Unit,
+    private val onCheckboxClick: (TaskEntity) -> Unit
+) : ListAdapter<TaskEntity, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TaskViewHolder(binding, onItemClick)
+        return TaskViewHolder(binding, onItemClick, onCheckboxClick)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -24,7 +26,8 @@ class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
 
     class TaskViewHolder(
         private val binding: ItemTaskBinding,
-        private val onItemClick: (TaskEntity) -> Unit
+        private val onItemClick: (TaskEntity) -> Unit,
+        private val onCheckboxClick: (TaskEntity) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private var current: TaskEntity? = null
@@ -35,7 +38,11 @@ class TaskAdapter(private val onItemClick: (TaskEntity) -> Unit) :
 
         fun bind(task: TaskEntity) {
             current = task
+            binding.taskCheckbox.setOnCheckedChangeListener(null)
             binding.taskCheckbox.isChecked = task.isDone
+            binding.taskCheckbox.setOnCheckedChangeListener { _, _ ->
+                onCheckboxClick(task)
+            }
             binding.taskTitle.text = task.title
             binding.taskNotes.text = task.description.orEmpty()
             binding.taskNotes.visibility =
