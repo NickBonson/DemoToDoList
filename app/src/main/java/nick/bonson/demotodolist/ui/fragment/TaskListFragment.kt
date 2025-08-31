@@ -39,7 +39,10 @@ class TaskListFragment : Fragment() {
         TaskListViewModelFactory(repository, prefs)
     }
 
-    private val adapter = TaskAdapter { task -> showTaskEdit(task) }
+    private val adapter = TaskAdapter(
+        onItemClick = { task -> showTaskEdit(task) },
+        onCheckboxClick = { task -> viewModel.onToggleDone(task) }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
