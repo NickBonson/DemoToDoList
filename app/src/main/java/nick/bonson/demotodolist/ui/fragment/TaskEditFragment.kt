@@ -6,22 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputEditText
 import androidx.fragment.app.activityViewModels
 import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.entity.TaskEntity
-import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
 import nick.bonson.demotodolist.data.preferences.TaskPreferences
+import nick.bonson.demotodolist.data.repository.DefaultTaskRepository
+import nick.bonson.demotodolist.databinding.FragmentTaskEditBinding
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModel
 import nick.bonson.demotodolist.ui.viewmodel.TaskListViewModelFactory
 import nick.bonson.demotodolist.utils.DateFormatter
 import java.util.Calendar
 
 class TaskEditFragment : Fragment() {
+
+    private var _binding: FragmentTaskEditBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: TaskListViewModel by activityViewModels {
         val context = requireContext().applicationContext
@@ -51,21 +52,34 @@ class TaskEditFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        val view = inflater.inflate(R.layout.fragment_task_edit, container, false)
-        val titleInput = view.findViewById<TextInputEditText>(R.id.input_title)
-        val notesInput = view.findViewById<TextInputEditText>(R.id.input_notes)
-        val priorityInput = view.findViewById<AutoCompleteTextView>(R.id.input_priority)
-        val dueDateInput = view.findViewById<TextInputEditText>(R.id.input_due_date)
-        val saveButton = view.findViewById<Button>(R.id.button_save)
-        val cancelButton = view.findViewById<Button>(R.id.button_cancel)
+        _binding = FragmentTaskEditBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val titleInput = binding.inputTitle
+        val notesInput = binding.inputNotes
+        val priorityInput = binding.inputPriority
+        val dueDateInput = binding.inputDueDate
+        val saveButton = binding.buttonSave
+        val cancelButton = binding.buttonCancel
 
         titleInput.setText(arguments?.getString(ARG_TITLE).orEmpty())
         notesInput.setText(arguments?.getString(ARG_NOTES).orEmpty())
 
         val priorities = resources.getStringArray(R.array.priority_entries)
-        priorityInput.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, priorities))
+        priorityInput.setAdapter(
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, priorities)
+        )
         priorityInput.setText(priorities[priority], false)
         priorityInput.setOnItemClickListener { _, _, position, _ -> priority = position }
 
@@ -122,8 +136,6 @@ class TaskEditFragment : Fragment() {
         }
 
         cancelButton.setOnClickListener { parentFragmentManager.popBackStack() }
-
-        return view
     }
 
     companion object {
@@ -150,3 +162,4 @@ class TaskEditFragment : Fragment() {
         }
     }
 }
+
