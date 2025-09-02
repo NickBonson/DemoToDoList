@@ -49,12 +49,18 @@ class TaskAdapter(
             binding.taskNotes.visibility =
                 if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
             binding.chipPriority.apply {
-                text = ""
+                // Remove extra padding and text to avoid empty space next to the icon
+                text = null
+                chipStartPadding = 0f
+                chipEndPadding = 0f
+                iconStartPadding = 0f
+                iconEndPadding = 0f
+                visibility = View.VISIBLE
                 when (task.priority) {
                     0 -> setChipIconResource(R.drawable.ic_stat_1)
                     1 -> setChipIconResource(R.drawable.ic_stat_2)
                     2 -> setChipIconResource(R.drawable.ic_stat_3)
-                    else -> chipIcon = null
+                    else -> visibility = View.GONE
                 }
             }
             binding.chipDue.text = task.dueAt?.let(DateFormatter::format) ?: ""
