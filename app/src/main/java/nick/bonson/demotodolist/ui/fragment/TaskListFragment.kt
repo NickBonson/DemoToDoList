@@ -104,10 +104,10 @@ class TaskListFragment : Fragment() {
                 if (searchView.query.toString() != state.query) {
                     searchView.setQuery(state.query, false)
                 }
-                when (state.sort) {
-                    TaskSort.BY_DUE_AT -> toolbar.menu.findItem(R.id.action_sort_due).isChecked = true
-                    TaskSort.BY_PRIORITY -> toolbar.menu.findItem(R.id.action_sort_priority).isChecked = true
-                }
+                toolbar.menu.findItem(R.id.action_sort_due).isChecked =
+                    state.sort == TaskSort.BY_DUE_AT
+                toolbar.menu.findItem(R.id.action_sort_priority).isChecked =
+                    state.sort == TaskSort.BY_PRIORITY
             }
         }
 
