@@ -3,7 +3,6 @@ package nick.bonson.demotodolist.data.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import nick.bonson.demotodolist.data.entity.TaskEntity
-import nick.bonson.demotodolist.model.Filter
 import nick.bonson.demotodolist.model.TaskSort
 
 @Dao
@@ -48,5 +47,5 @@ interface TaskDao {
             CASE WHEN :sortMode = 1 THEN priority END DESC
         """
     )
-    fun searchFlow(query: String, filter: Filter, sortMode: TaskSort): Flow<List<TaskEntity>>
+    fun searchFlow(query: String, filter: Int, sortMode: Int): Flow<List<TaskEntity>>
 }
