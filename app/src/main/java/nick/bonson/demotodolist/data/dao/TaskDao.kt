@@ -1,11 +1,13 @@
 package nick.bonson.demotodolist.data.dao
 
 import androidx.room.*
+import nick.bonson.demotodolist.data.db.TaskSortConverters
 import kotlinx.coroutines.flow.Flow
 import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.model.TaskSort
 
 @Dao
+@TypeConverters(TaskSortConverters::class)
 interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(task: TaskEntity)
@@ -56,5 +58,5 @@ interface TaskDao {
             CASE WHEN :sortMode = 1 THEN dueAt END ASC
         """
     )
-    fun searchFlow(query: String, filter: Int, sortMode: Int): Flow<List<TaskEntity>>
+    fun searchFlow(query: String, filter: Int, sortMode: TaskSort): Flow<List<TaskEntity>>
 }

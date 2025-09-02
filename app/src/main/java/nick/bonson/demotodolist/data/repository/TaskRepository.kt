@@ -22,7 +22,7 @@ class DefaultTaskRepository(private val dao: TaskDao) : TaskRepository {
         dao.getByStatusFlow(isDone, sortMode)
 
     override fun searchFlow(query: String, filter: Filter, sortMode: TaskSort): Flow<List<TaskEntity>> =
-        dao.searchFlow(query, filter.ordinal, sortMode.ordinal)
+        dao.searchFlow(query, filter.ordinal, sortMode)
 
     override suspend fun insert(task: TaskEntity) = dao.insert(task)
 
