@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import nick.bonson.demotodolist.R
 import nick.bonson.demotodolist.data.db.AppDatabase
 import nick.bonson.demotodolist.data.entity.TaskEntity
