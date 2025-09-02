@@ -75,10 +75,14 @@ class TaskListFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_sort_due -> {
+                    item.isChecked = true
+                    toolbar.menu.findItem(R.id.action_sort_priority).isChecked = false
                     viewModel.onSortChanged(TaskSort.BY_DUE_AT)
                     true
                 }
                 R.id.action_sort_priority -> {
+                    item.isChecked = true
+                    toolbar.menu.findItem(R.id.action_sort_due).isChecked = false
                     viewModel.onSortChanged(TaskSort.BY_PRIORITY)
                     true
                 }
