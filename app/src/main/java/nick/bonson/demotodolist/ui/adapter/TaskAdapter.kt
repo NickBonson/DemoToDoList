@@ -51,9 +51,9 @@ class TaskAdapter(
             binding.chipPriority.apply {
                 text = ""
                 when (task.priority) {
-                    0 -> setChipIconResource(R.drawable.stat_1)
-                    1 -> setChipIconResource(R.drawable.stat_2)
-                    2 -> setChipIconResource(R.drawable.stat_3)
+                    0 -> setChipIconResource(R.drawable.ic_stat_1)
+                    1 -> setChipIconResource(R.drawable.ic_stat_2)
+                    2 -> setChipIconResource(R.drawable.ic_stat_3)
                     else -> chipIcon = null
                 }
             }
