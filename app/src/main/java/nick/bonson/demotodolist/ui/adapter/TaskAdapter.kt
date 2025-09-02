@@ -50,11 +50,7 @@ class TaskAdapter(
                 if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
             binding.chipPriority.apply {
                 // Remove extra padding and text to avoid empty space next to the icon
-                text = null
-                chipStartPadding = 0f
-                chipEndPadding = 0f
-                iconStartPadding = 0f
-                iconEndPadding = 0f
+                text = ""
                 visibility = View.VISIBLE
                 when (task.priority) {
                     0 -> setChipIconResource(R.drawable.ic_stat_1)
