@@ -9,6 +9,7 @@ import nick.bonson.demotodolist.data.entity.TaskEntity
 import nick.bonson.demotodolist.databinding.ItemTaskBinding
 import nick.bonson.demotodolist.utils.DateFormatter
 import nick.bonson.demotodolist.utils.TaskDiffCallback
+import nick.bonson.demotodolist.R
 
 class TaskAdapter(
     private val onItemClick: (TaskEntity) -> Unit,
@@ -47,7 +48,15 @@ class TaskAdapter(
             binding.taskNotes.text = task.description.orEmpty()
             binding.taskNotes.visibility =
                 if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
-            binding.chipPriority.text = task.priority.toString()
+            binding.chipPriority.apply {
+                text = ""
+                when (task.priority) {
+                    0 -> setChipIconResource(R.drawable.stat_1)
+                    1 -> setChipIconResource(R.drawable.stat_2)
+                    2 -> setChipIconResource(R.drawable.stat_3)
+                    else -> chipIcon = null
+                }
+            }
             binding.chipDue.text = task.dueAt?.let(DateFormatter::format) ?: ""
             binding.chipDue.visibility =
                 if (task.dueAt != null) View.VISIBLE else View.GONE
