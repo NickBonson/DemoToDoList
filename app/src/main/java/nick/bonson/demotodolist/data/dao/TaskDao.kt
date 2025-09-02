@@ -22,7 +22,9 @@ interface TaskDao {
         ORDER BY
             CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
-            CASE WHEN :sortMode = 1 THEN priority END DESC
+            CASE WHEN :sortMode = 0 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN dueAt END ASC
         """
     )
     fun getAllFlow(sortMode: TaskSort): Flow<List<TaskEntity>>
@@ -34,7 +36,9 @@ interface TaskDao {
         ORDER BY
             CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
-            CASE WHEN :sortMode = 1 THEN priority END DESC
+            CASE WHEN :sortMode = 0 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN dueAt END ASC
         """
     )
     fun getByStatusFlow(isDone: Boolean, sortMode: TaskSort): Flow<List<TaskEntity>>
@@ -47,7 +51,9 @@ interface TaskDao {
         ORDER BY
             CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
-            CASE WHEN :sortMode = 1 THEN priority END DESC
+            CASE WHEN :sortMode = 0 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN priority END DESC,
+            CASE WHEN :sortMode = 1 THEN dueAt END ASC
         """
     )
     fun searchFlow(query: String, filter: Int, sortMode: Int): Flow<List<TaskEntity>>
