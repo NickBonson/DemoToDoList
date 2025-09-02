@@ -20,6 +20,7 @@ interface TaskDao {
         """
         SELECT * FROM tasks
         ORDER BY
+            CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
             CASE WHEN :sortMode = 1 THEN priority END DESC
         """
@@ -31,6 +32,7 @@ interface TaskDao {
         SELECT * FROM tasks
         WHERE isDone = :isDone
         ORDER BY
+            CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
             CASE WHEN :sortMode = 1 THEN priority END DESC
         """
@@ -43,6 +45,7 @@ interface TaskDao {
         WHERE title LIKE '%' || :query || '%'
         AND (:filter = 0 OR (:filter = 1 AND isDone = 0) OR (:filter = 2 AND isDone = 1))
         ORDER BY
+            CASE WHEN :sortMode = 0 THEN CASE WHEN dueAt IS NULL THEN 1 ELSE 0 END END ASC,
             CASE WHEN :sortMode = 0 THEN dueAt END ASC,
             CASE WHEN :sortMode = 1 THEN priority END DESC
         """
